@@ -1164,22 +1164,24 @@ dd {
   }
 
   .viewer-shell {
-    --mobile-info-height: 320px;
+    --mobile-info-height: 260px;
     height: 100%;
     min-height: 0;
     border-radius: 8px;
   }
 
   .viewer-shell canvas {
+    position: absolute !important;
     inset: 0 0 auto 0;
-    height: calc(100% - var(--mobile-info-height));
+    height: calc(100% - var(--mobile-info-height)) !important;
+    max-height: calc(100% - var(--mobile-info-height));
   }
 
   .annotation-layer {
     left: 8px;
     right: 8px;
-    top: auto;
-    bottom: 8px;
+    top: calc(100% - var(--mobile-info-height) + 126px);
+    bottom: auto;
   }
 
   .annotation-card {
@@ -1238,8 +1240,8 @@ dd {
   .mode-toggle {
     left: 8px;
     right: 8px;
-    top: auto;
-    bottom: 274px;
+    top: calc(100% - var(--mobile-info-height) + 8px);
+    bottom: auto;
     gap: 6px;
   }
 
@@ -1257,7 +1259,8 @@ dd {
   .tracking-video {
     left: auto;
     right: 8px;
-    bottom: 192px;
+    top: calc(100% - var(--mobile-info-height) + 48px);
+    bottom: auto;
     width: 96px;
     height: 72px;
   }
@@ -1265,7 +1268,8 @@ dd {
   .viewer-instructions {
     left: 8px;
     right: 8px;
-    bottom: 154px;
+    top: calc(100% - var(--mobile-info-height) + 86px);
+    bottom: auto;
     justify-content: center;
   }
 
@@ -1283,10 +1287,7 @@ dd {
   }
 
   .viewer-shell.is-hand-mode .hotspot::after {
-    max-width: 78px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 0.58rem;
+    display: none;
   }
 
   .hand-pointer span,
