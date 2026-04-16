@@ -31,10 +31,10 @@ const FEATURE_LABELS = {
 };
 
 const zoneColors = {
-  temple: "#2dd4bf",
-  "frame edge": "#f9736b",
-  "touch control": "#a3e635",
-  "audio/input": "#facc15"
+  temple: "#007aff",
+  "frame edge": "#8e8e93",
+  "touch control": "#30d158",
+  "audio/input": "#ff9f0a"
 };
 
 class AppErrorBoundary extends React.Component {
@@ -420,7 +420,7 @@ function HandTrackingController({
             })
             .filter(Boolean)
             .sort((a, b) => a.distance - b.distance)[0];
-          const hoverGesture = nearestHotspot && nearestHotspot.distance < 210 ? nearestHotspot.gesture : null;
+          const hoverGesture = nearestHotspot && nearestHotspot.distance < 112 ? nearestHotspot.gesture : null;
 
           onPointerUpdate({ ...pointer, hovering: hoverGesture?.id || null });
           onPreviewGesture(hoverGesture?.id || null);
