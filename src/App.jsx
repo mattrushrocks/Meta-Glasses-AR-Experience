@@ -249,6 +249,7 @@ function Hotspot({ gesture, anchor, isActive, onSelect, onPreview, hotspotScale,
       <div className="hotspot-wrap">
         <button
           data-hotspot-id={gesture.id}
+          data-zone-label={gesture.name}
           className={`hotspot ${isActive ? "is-active" : ""}`}
           style={{
             "--hotspot-color": color,
@@ -429,7 +430,7 @@ function HandTrackingController({
             x: pointer.x * window.innerWidth,
             y: pointer.y * window.innerHeight
           };
-          const targetPadding = 8;
+          const targetPadding = 0;
           const hitZones = gestures
             .map((item) => {
               const element = document.querySelector(`[data-hotspot-id="${item.id}"]`);

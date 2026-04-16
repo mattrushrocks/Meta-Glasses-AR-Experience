@@ -275,18 +275,43 @@ select {
 }
 
 .viewer-shell.is-hand-mode {
-  --hotspot-target-size: 64px;
+  --hotspot-target-size: 70px;
 }
 
 .viewer-shell.is-hand-mode .hotspot::before {
-  inset: 3px;
+  inset: 0;
   border-width: 2px;
-  opacity: 0.82;
+  opacity: 0.9;
 }
 
 .viewer-shell.is-hand-mode .hotspot span {
   width: calc(20px * var(--hotspot-scale, 1));
   height: calc(20px * var(--hotspot-scale, 1));
+}
+
+.viewer-shell.is-hand-mode .hotspot::after {
+  content: attr(data-zone-label);
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 4px);
+  transform: translateX(-50%);
+  border: 1px solid color-mix(in srgb, var(--hotspot-color), transparent 38%);
+  border-radius: 7px;
+  padding: 3px 6px;
+  background: rgba(255, 255, 255, 0.88);
+  color: #1d1d1f;
+  font-size: 0.68rem;
+  font-weight: 850;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(29, 29, 31, 0.12);
+  pointer-events: none;
+}
+
+.viewer-shell.is-hand-mode .hotspot[data-hotspot-id="microphone"]::after,
+.viewer-shell.is-hand-mode .hotspot[data-hotspot-id="camera"]::after {
+  top: auto;
+  bottom: calc(100% + 4px);
 }
 
 .hotspot:hover span,
