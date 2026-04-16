@@ -290,13 +290,10 @@ function HotspotAnnotations({ activeHotspot, personaJourney }) {
         <span>{activeHotspot.location}</span>
         <h3>{activeHotspot.name}</h3>
         <dl>
-          <div><dt>What it does</dt><dd>{activeHotspot.whatItDoes}</dd></div>
-          <div><dt>Why it matters</dt><dd>{activeHotspot.whyItMatters}</dd></div>
-          <div><dt>Persona insight</dt><dd>{moment.why}</dd></div>
-          <div><dt>Likely interaction</dt><dd>{activeHotspot.likelyInteraction}</dd></div>
-          <div><dt>Emotion / behavior</dt><dd>{moment.feeling}: {moment.doing}</dd></div>
-          <div><dt>Where / when</dt><dd>{moment.where}; {moment.when}</dd></div>
-          <div><dt>Listening</dt><dd>{moment.listening}</dd></div>
+          <div><dt>Does</dt><dd>{activeHotspot.whatItDoes}</dd></div>
+          <div><dt>Persona</dt><dd>{moment.feeling}: {moment.why}</dd></div>
+          <div><dt>Use</dt><dd>{activeHotspot.likelyInteraction}</dd></div>
+          <div><dt>Context</dt><dd>{activeHotspot.id === "speaker" ? moment.listening : `${moment.where}; ${moment.when}`}</dd></div>
         </dl>
         {activeHotspot.id === "speaker" && moment.musicImage && (
           <img className="music-card" src={moment.musicImage} alt={moment.musicAlt || `${personaJourney.name} currently listening`} />
