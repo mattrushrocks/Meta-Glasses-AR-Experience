@@ -96,7 +96,14 @@ function getHotspotFocusRotation(gesture) {
 
 function ModelRig({ controlTarget, interactionMode, children }) {
   const groupRef = useRef(null);
-  const { camera } = useThree();
+  const { camera, size } = useThree();
+  const mobileCameraMultiplier = size.width < 720 ? 1.82 : 1;
+
+  useEffect(() => {
+    camera.position.z = controlTarget.cameraDistance * mobileCameraMultiplier;
+    camera.lookAt(0, 0, 0);
+    camera.updateProjectionMatrix();
+  }, [camera, controlTarget.cameraDistance, mobileCameraMultiplier, size.width]);
 
   useFrame((_, delta) => {
     const damping = 1 - Math.exp(-delta * 8);
@@ -107,7 +114,7 @@ function ModelRig({ controlTarget, interactionMode, children }) {
     }
 
     if (interactionMode === "hand") {
-      camera.position.z = THREE.MathUtils.lerp(camera.position.z, controlTarget.cameraDistance, damping);
+      camera.position.z = THREE.MathUtils.lerp(camera.position.z, controlTarget.cameraDistance * mobileCameraMultiplier, damping);
       camera.lookAt(0, 0, 0);
       camera.updateProjectionMatrix();
     }
@@ -828,7 +835,7 @@ function CenterStage({
             </ModelRig>
             <ContactShadows position={[0, -0.58, 0]} opacity={0.24} scale={4.2} blur={2.4} />
             <Environment preset="city" />
-            <OrbitControls enabled={interactionMode === "mouse"} enablePan={false} minDistance={3.35} maxDistance={6.4} />
+            <OrbitControls enabled={interactionMode === "mouse"} enablePan={false} minDistance={3.8} maxDistance={10.5} />
           </Suspense>
         </Canvas>
         {interactionMode === "hand" && (
