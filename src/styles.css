@@ -220,8 +220,8 @@ select {
   position: relative;
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: var(--hotspot-target-size, 46px);
+  height: var(--hotspot-target-size, 46px);
 }
 
 .viewer-shell canvas {
@@ -234,8 +234,8 @@ select {
   position: relative;
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: var(--hotspot-target-size, 46px);
+  height: var(--hotspot-target-size, 46px);
   border: 0;
   border-radius: 999px;
   padding: 0;
@@ -244,7 +244,20 @@ select {
   transform: translateZ(0);
 }
 
+.hotspot::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: 1px solid color-mix(in srgb, var(--hotspot-color), transparent 40%);
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--hotspot-color), transparent 88%);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
 .hotspot span {
+  position: relative;
+  z-index: 1;
   display: block;
   width: calc(16px * var(--hotspot-scale, 1));
   height: calc(16px * var(--hotspot-scale, 1));
@@ -253,6 +266,27 @@ select {
   background: color-mix(in srgb, var(--hotspot-color), white 12%);
   box-shadow: 0 0 0 5px color-mix(in srgb, var(--hotspot-color), transparent 80%), 0 0 18px color-mix(in srgb, var(--hotspot-color), transparent 28%);
   pointer-events: none;
+}
+
+.hotspot[data-hotspot-id="camera"] span,
+.hotspot[data-hotspot-id="microphone"] span {
+  width: calc(18px * var(--hotspot-scale, 1));
+  height: calc(18px * var(--hotspot-scale, 1));
+}
+
+.viewer-shell.is-hand-mode {
+  --hotspot-target-size: 64px;
+}
+
+.viewer-shell.is-hand-mode .hotspot::before {
+  inset: 3px;
+  border-width: 2px;
+  opacity: 0.82;
+}
+
+.viewer-shell.is-hand-mode .hotspot span {
+  width: calc(20px * var(--hotspot-scale, 1));
+  height: calc(20px * var(--hotspot-scale, 1));
 }
 
 .hotspot:hover span,

@@ -429,27 +429,29 @@ function HandTrackingController({
             x: pointer.x * window.innerWidth,
             y: pointer.y * window.innerHeight
           };
-          const targetRadius = 42;
+          const targetPadding = 8;
           const hitZones = gestures
             .map((item) => {
               const element = document.querySelector(`[data-hotspot-id="${item.id}"]`);
               if (!element) return null;
-              const marker = element.querySelector("span");
-              const rect = (marker || element).getBoundingClientRect();
+              const rect = element.getBoundingClientRect();
+              const left = rect.left - targetPadding;
+              const right = rect.right + targetPadding;
+              const top = rect.top - targetPadding;
+              const bottom = rect.bottom + targetPadding;
               const centerX = rect.left + rect.width / 2;
               const centerY = rect.top + rect.height / 2;
               const distance = Math.hypot(centerX - pointerPixels.x, centerY - pointerPixels.y);
-              const radius = Math.max(rect.width, rect.height) / 2 + targetRadius;
-              const inside = distance <= radius;
+              const inside = pointerPixels.x >= left && pointerPixels.x <= right && pointerPixels.y >= top && pointerPixels.y <= bottom;
               return {
                 gesture: item,
                 rect: {
-                  left: centerX - radius,
-                  right: centerX + radius,
-                  top: centerY - radius,
-                  bottom: centerY + radius,
-                  width: radius * 2,
-                  height: radius * 2
+                  left,
+                  right,
+                  top,
+                  bottom,
+                  width: right - left,
+                  height: bottom - top
                 },
                 inside,
                 distance
@@ -799,7 +801,7 @@ function CenterStage({
 
   return (
     <main className="center-stage">
-      <div className="viewer-shell">
+      <div className={`viewer-shell ${interactionMode === "hand" ? "is-hand-mode" : ""}`}>
         <Canvas camera={{ position: [0, 0.58, BASE_CAMERA_DISTANCE], fov: 42, near: 0.08, far: 40 }}>
           <Suspense fallback={null}>
             <ambientLight intensity={0.9} />
