@@ -141,8 +141,8 @@ export const anchors = [
     id: "audio-camera-zone",
     label: "Audio Input",
     target: "frontFrame",
-    localPosition: [1.02, 0.17, -0.86],
-    offset: [0, 0.03, 0],
+    localPosition: [-1.02, 0.12, 0.28],
+    offset: [-0.02, 0.04, 0],
     zone: "audio/input",
     type: "hardware"
   },

@@ -434,7 +434,8 @@ function HandTrackingController({
             .map((item) => {
               const element = document.querySelector(`[data-hotspot-id="${item.id}"]`);
               if (!element) return null;
-              const rect = element.getBoundingClientRect();
+              const marker = element.querySelector("span");
+              const rect = (marker || element).getBoundingClientRect();
               const centerX = rect.left + rect.width / 2;
               const centerY = rect.top + rect.height / 2;
               const distance = Math.hypot(centerX - pointerPixels.x, centerY - pointerPixels.y);
