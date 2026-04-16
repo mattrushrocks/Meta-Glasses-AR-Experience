@@ -287,9 +287,11 @@ function HotspotAnnotations({ activeHotspot, personaJourney }) {
 
   return (
     <div className="annotation-layer">
-      <article className="annotation-card">
-        <span>{activeHotspot.location}</span>
-        <h3>{activeHotspot.name}</h3>
+      <details className="annotation-card" open>
+        <summary>
+          <span>{activeHotspot.location}</span>
+          <strong>{activeHotspot.name}</strong>
+        </summary>
         <dl>
           <div><dt>Does</dt><dd>{activeHotspot.whatItDoes}</dd></div>
           <div><dt>Persona</dt><dd>{moment.feeling}: {moment.why}</dd></div>
@@ -299,7 +301,7 @@ function HotspotAnnotations({ activeHotspot, personaJourney }) {
         {activeHotspot.id === "speaker" && moment.musicImage && (
           <img className="music-card" src={moment.musicImage} alt={moment.musicAlt || `${personaJourney.name} currently listening`} />
         )}
-      </article>
+      </details>
     </div>
   );
 }

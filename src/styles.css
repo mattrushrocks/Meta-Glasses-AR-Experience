@@ -381,14 +381,42 @@ select {
   animation: cardIn 180ms ease both;
 }
 
-.annotation-card > span {
+.annotation-card summary {
+  display: grid;
+  gap: 4px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.annotation-card summary::-webkit-details-marker {
+  display: none;
+}
+
+.annotation-card summary::after {
+  content: "Details";
+  align-self: start;
+  justify-self: start;
+  border: 1px solid rgba(29, 29, 31, 0.12);
+  border-radius: 7px;
+  padding: 2px 7px;
+  color: #1d1d1f;
+  background: rgba(255, 255, 255, 0.86);
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.annotation-card[open] summary::after {
+  content: "Hide";
+}
+
+.annotation-card summary span {
   color: #007aff;
   font-size: 0.75rem;
   font-weight: 850;
   text-transform: uppercase;
 }
 
-.annotation-card h3 {
+.annotation-card summary strong {
   margin: 0;
   font-size: 1.1rem;
   align-self: end;
@@ -1136,7 +1164,7 @@ dd {
   }
 
   .viewer-shell {
-    --mobile-info-height: 178px;
+    --mobile-info-height: 220px;
     height: 100%;
     min-height: 0;
     border-radius: 8px;
@@ -1151,13 +1179,13 @@ dd {
     left: 8px;
     right: 8px;
     top: auto;
-    bottom: 36px;
+    bottom: 44px;
   }
 
   .annotation-card {
     grid-template-columns: 1fr;
     gap: 7px;
-    max-height: 106px;
+    max-height: 132px;
     overflow: auto;
     padding: 9px;
     background: rgba(255, 255, 255, 0.94);
@@ -1170,12 +1198,30 @@ dd {
     gap: 6px 8px;
   }
 
-  .annotation-card > span,
+  .annotation-card summary {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+
+  .annotation-card summary span {
+    grid-column: 1;
+  }
+
+  .annotation-card summary strong {
+    grid-column: 1;
+  }
+
+  .annotation-card summary::after {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  .annotation-card summary span,
   .annotation-card dt {
     font-size: 0.66rem;
   }
 
-  .annotation-card h3 {
+  .annotation-card summary strong {
     font-size: 0.98rem;
   }
 
@@ -1207,7 +1253,7 @@ dd {
     left: 8px;
     right: 112px;
     top: auto;
-    bottom: 148px;
+    bottom: 184px;
     width: auto;
     padding: 7px 8px;
     box-shadow: none;
@@ -1220,7 +1266,7 @@ dd {
   .tracking-video {
     left: auto;
     right: 8px;
-    bottom: 108px;
+    bottom: 136px;
     width: 96px;
     height: 72px;
   }
