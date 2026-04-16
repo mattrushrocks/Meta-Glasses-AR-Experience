@@ -2,17 +2,18 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Html, OrbitControls, Environment, ContactShadows, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import React, { Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { anchors, featureHotspots as gestures, journeyStages, personaJourneys } from "./data";
+import { anchors, featureHotspots as gestures, personaJourneys } from "./data";
 
 const MODEL_URL = "/models/ray-ban-meta/source/Untitled.glb";
 const BASE_CAMERA_DISTANCE = 5.15;
 const MODEL_TARGET_WIDTH = 2.95;
 const FRONT_ROTATION = [0.03, Math.PI, 0];
-const FOCUS_ROTATIONS = {
-  temple: [0.05, Math.PI + 0.72, 0],
+const HOTSPOT_FOCUS_ROTATIONS = {
+  camera: [0.02, Math.PI + 0.24, 0],
+  touchpad: [0.04, Math.PI + 0.72, 0],
+  microphone: [0.03, Math.PI - 0.58, 0],
   speaker: [0.03, Math.PI - 0.62, 0],
-  full: FRONT_ROTATION,
-  none: FRONT_ROTATION
+  body: FRONT_ROTATION
 };
 const FEATURE_LABELS = {
   touch_sensor: "Touch sensor",
@@ -89,8 +90,8 @@ function getGestureAnchor(gesture, anchorOverrides) {
   };
 }
 
-function getFocusRotation(stage) {
-  return FOCUS_ROTATIONS[stage.modelFocus] || FRONT_ROTATION;
+function getHotspotFocusRotation(gesture) {
+  return HOTSPOT_FOCUS_ROTATIONS[gesture.id] || FRONT_ROTATION;
 }
 
 function ModelRig({ controlTarget, interactionMode, children }) {
@@ -297,6 +298,9 @@ function HotspotAnnotations({ activeHotspot, personaJourney }) {
           <div><dt>Where / when</dt><dd>{moment.where}; {moment.when}</dd></div>
           <div><dt>Listening</dt><dd>{moment.listening}</dd></div>
         </dl>
+        {activeHotspot.id === "speaker" && moment.musicImage && (
+          <img className="music-card" src={moment.musicImage} alt={moment.musicAlt || `${personaJourney.name} currently listening`} />
+        )}
       </article>
     </div>
   );
@@ -658,7 +662,7 @@ function HandCaptureOverlay({ gesture, stage, viewMode }) {
   );
 }
 
-function LeftPanel({ personaId, setPersonaId, personaJourney, activeMoment, activeGesture, stage, stageId, setStageId, autoPlay, setAutoPlay }) {
+function LeftPanel({ personaId, setPersonaId, personaJourney, activeMoment, activeGesture, autoPlay, setAutoPlay }) {
   return (
     <aside className="panel left-panel">
       <div className="eyebrow">Meta glasses journey</div>
@@ -674,17 +678,8 @@ function LeftPanel({ personaId, setPersonaId, personaJourney, activeMoment, acti
         </select>
       </label>
 
-      <label className="field">
-        Journey stage
-        <select value={stageId} onChange={(event) => setStageId(event.target.value)}>
-          {journeyStages.map((item) => (
-            <option key={item.id} value={item.id}>{item.title}</option>
-          ))}
-        </select>
-      </label>
-
       <button className={`autoplay ${autoPlay ? "active" : ""}`} onClick={() => setAutoPlay((value) => !value)}>
-        {autoPlay ? "Pause presentation loop" : "Autoplay demo mode"}
+        {autoPlay ? "Pause hotspot tour" : "Autoplay hotspot tour"}
       </button>
 
       <section className="stage-summary">
@@ -797,7 +792,6 @@ function CenterStage({
 
 function App() {
   const [personaId, setPersonaId] = useState("sheila");
-  const [stageId, setStageId] = useState("entry");
   const [selectedGestureId, setSelectedGestureId] = useState("touchpad");
   const [previewId, setPreviewId] = useState(null);
   const [autoPlay, setAutoPlay] = useState(false);
@@ -812,7 +806,6 @@ function App() {
   const [handPointer, setHandPointer] = useState(null);
 
   const personaJourney = useMemo(() => personaJourneys.find((item) => item.id === personaId) || personaJourneys[0], [personaId]);
-  const stage = useMemo(() => journeyStages.find((item) => item.id === stageId) || journeyStages[0], [stageId]);
   const gesture = useMemo(() => gestures.find((item) => item.id === selectedGestureId) || gestures[0], [selectedGestureId]);
   const activeGesture = useMemo(() => gestures.find((item) => item.id === previewId) || gesture, [gesture, previewId]);
   const activeMoment = personaJourney.moments[activeGesture.id] || personaJourney.moments.touchpad;
@@ -829,7 +822,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    setStageId(personaJourney.defaultStageId);
     setSelectedGestureId("touchpad");
     setPreviewId(null);
   }, [personaJourney]);
@@ -838,19 +830,19 @@ function App() {
     setPreviewId(null);
     setControlTarget((current) => ({
       ...current,
-      rotation: getFocusRotation(stage)
+      rotation: getHotspotFocusRotation(gesture)
     }));
-  }, [stage]);
+  }, [gesture]);
 
   useEffect(() => {
     if (!autoPlay) return undefined;
 
     const interval = window.setInterval(() => {
-      setStageId((current) => {
-        const index = journeyStages.findIndex((item) => item.id === current);
-        return journeyStages[(index + 1) % journeyStages.length].id;
+      setSelectedGestureId((current) => {
+        const index = gestures.findIndex((item) => item.id === current);
+        return gestures[(index + 1) % gestures.length].id;
       });
-    }, 5200);
+    }, 4200);
 
     return () => window.clearInterval(interval);
   }, [autoPlay]);
@@ -864,9 +856,6 @@ function App() {
           personaJourney={personaJourney}
           activeMoment={activeMoment}
           activeGesture={activeGesture}
-          stage={stage}
-          stageId={stage.id}
-          setStageId={setStageId}
           autoPlay={autoPlay}
           setAutoPlay={setAutoPlay}
         />

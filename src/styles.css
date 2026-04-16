@@ -343,6 +343,18 @@ select {
   line-height: 1.35;
 }
 
+.music-card {
+  grid-column: 1 / -1;
+  display: block;
+  width: min(640px, 100%);
+  max-height: 92px;
+  border: 1px solid rgba(29, 29, 31, 0.1);
+  border-radius: 8px;
+  object-fit: contain;
+  object-position: left center;
+  background: #111111;
+}
+
 .hand-pointer {
   position: fixed;
   z-index: 20;

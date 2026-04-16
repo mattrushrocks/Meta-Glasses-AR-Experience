@@ -141,7 +141,7 @@ export const anchors = [
     id: "audio-camera-zone",
     label: "Audio Input",
     target: "frontFrame",
-    localPosition: [-0.92, 0.18, -1.14],
+    localPosition: [-1.08, 0.14, 0.34],
     offset: [-0.01, 0.03, 0],
     zone: "audio/input",
     type: "hardware"
@@ -464,7 +464,9 @@ export const personaJourneys = [
         why: "She needs reminders and prompts without isolating herself from the classroom.",
         where: "classroom, hallway, or teacher workroom",
         journey: "Classroom support",
-        listening: "low-volume reminders, spoken prompts, or confirmation tones",
+        listening: "Journey, Separate Ways (Worlds Apart)",
+        musicImage: "/music/journey-separate-ways.png",
+        musicAlt: "Apple Music now playing card for Journey Separate Ways",
         when: "between instruction moments"
       },
       body: {
@@ -575,7 +577,9 @@ export const personaJourneys = [
         why: "Hands-free open-ear audio lets him keep music close while staying aware of his surroundings.",
         where: "commute, sidewalk, desk break, or concert line",
         journey: "Content Interaction",
-        listening: "Spotify playlists, new releases, shared playlists, and notifications",
+        listening: "Steely Dan, Aja",
+        musicImage: "/music/steely-dan-aja.png",
+        musicAlt: "Apple Music now playing card for Steely Dan Aja",
         when: "most routine movement moments"
       },
       body: {
