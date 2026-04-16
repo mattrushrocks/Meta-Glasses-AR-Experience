@@ -310,13 +310,16 @@ function HandTrackingController({
   onModeFallback,
   onPointerUpdate,
   onSelectGesture,
-  onPreviewGesture
+  onPreviewGesture,
+  pointerDebug
 }) {
   const videoRef = useRef(null);
   const landmarkerRef = useRef(null);
   const rafRef = useRef(null);
   const streamRef = useRef(null);
   const pinchRef = useRef(null);
+  const smoothedPointerRef = useRef(null);
+  const hoverCandidateRef = useRef(null);
   const lastResetRef = useRef(0);
   const lastSelectRef = useRef(0);
   const fistStartRef = useRef(null);
@@ -389,6 +392,7 @@ function HandTrackingController({
         if (hand) {
           const thumbTip = hand[4];
           const indexTip = hand[8];
+          const indexBase = hand[5];
           const indexPip = hand[6];
           const middleTip = hand[12];
           const middlePip = hand[10];
@@ -410,30 +414,64 @@ function HandTrackingController({
           ].filter(Boolean).length;
           const fist = foldedFingers >= 4 && pinchDistance > 0.12;
           const isPinching = pinchDistance < 0.14;
-          const pointer = {
-            x: 1 - indexTip.x,
-            y: indexTip.y,
-            pinching: isPinching
+          const rawPointer = {
+            x: clamp(1 - (indexTip.x + (indexTip.x - indexBase.x) * 0.34), 0, 1),
+            y: clamp(indexTip.y + (indexTip.y - indexBase.y) * 0.34, 0, 1)
           };
+          const currentSmoothed = smoothedPointerRef.current || rawPointer;
+          const smoothedPointer = {
+            x: currentSmoothed.x + (rawPointer.x - currentSmoothed.x) * 0.38,
+            y: currentSmoothed.y + (rawPointer.y - currentSmoothed.y) * 0.38
+          };
+          smoothedPointerRef.current = smoothedPointer;
+          const pointer = { ...smoothedPointer, pinching: isPinching };
           const pointerPixels = {
             x: pointer.x * window.innerWidth,
             y: pointer.y * window.innerHeight
           };
-          const targetPadding = 6;
-          const hoverGesture = gestures.find((item) => {
-            const element = document.querySelector(`[data-hotspot-id="${item.id}"]`);
-            if (!element) return false;
-            const rect = element.getBoundingClientRect();
-            return (
-              pointerPixels.x >= rect.left - targetPadding &&
-              pointerPixels.x <= rect.right + targetPadding &&
-              pointerPixels.y >= rect.top - targetPadding &&
-              pointerPixels.y <= rect.bottom + targetPadding
-            );
-          });
+          const targetPadding = 1;
+          const hitZones = gestures
+            .map((item) => {
+              const element = document.querySelector(`[data-hotspot-id="${item.id}"]`);
+              if (!element) return null;
+              const marker = element.querySelector("span");
+              const rect = (marker || element).getBoundingClientRect();
+              const left = rect.left - targetPadding;
+              const right = rect.right + targetPadding;
+              const top = rect.top - targetPadding;
+              const bottom = rect.bottom + targetPadding;
+              const centerX = rect.left + rect.width / 2;
+              const centerY = rect.top + rect.height / 2;
+              const inside = pointerPixels.x >= left && pointerPixels.x <= right && pointerPixels.y >= top && pointerPixels.y <= bottom;
+              return {
+                gesture: item,
+                rect: { left, right, top, bottom, width: right - left, height: bottom - top },
+                inside,
+                distance: Math.hypot(centerX - pointerPixels.x, centerY - pointerPixels.y)
+              };
+            })
+            .filter(Boolean);
+          const hoverZone = hitZones.filter((zone) => zone.inside).sort((a, b) => a.distance - b.distance)[0];
+          const hoverGesture = hoverZone?.gesture || null;
+          const now = performance.now();
+          if (hoverGesture?.id !== hoverCandidateRef.current?.id) {
+            hoverCandidateRef.current = hoverGesture ? { id: hoverGesture.id, startedAt: now } : null;
+          }
+          const dwellReady = Boolean(hoverGesture && hoverCandidateRef.current && now - hoverCandidateRef.current.startedAt > 300);
 
-          onPointerUpdate({ ...pointer, hovering: hoverGesture?.id || null });
-          onPreviewGesture(hoverGesture?.id || null);
+          onPointerUpdate({
+            ...pointer,
+            rawX: rawPointer.x,
+            rawY: rawPointer.y,
+            hovering: dwellReady ? hoverGesture?.id || null : null,
+            previewing: hoverGesture?.id || null,
+            debug: pointerDebug ? {
+              target: hoverGesture?.name || "none",
+              dwell: hoverGesture ? clamp((now - hoverCandidateRef.current.startedAt) / 300, 0, 1) : 0,
+              rect: hoverZone?.rect || null
+            } : null
+          });
+          onPreviewGesture(dwellReady ? hoverGesture?.id || null : null);
 
           if (fist) {
             fistStartRef.current ??= performance.now();
@@ -445,6 +483,7 @@ function HandTrackingController({
             lastResetRef.current = performance.now();
             fistStartRef.current = null;
             pinchRef.current = null;
+            hoverCandidateRef.current = null;
             setStableStatus("Fist reset");
             onTargetChange({ rotation: FRONT_ROTATION, cameraDistance: BASE_CAMERA_DISTANCE });
           } else {
@@ -453,6 +492,7 @@ function HandTrackingController({
 
             if (isPinching) {
               pinchRef.current = { distance: pinchDistance };
+              hoverCandidateRef.current = null;
               setStableStatus("Pinch and move to rotate");
               onPreviewGesture(null);
               onTargetChange({
@@ -461,8 +501,8 @@ function HandTrackingController({
               });
             } else {
               pinchRef.current = null;
-              setStableStatus(hoverGesture ? `Pointing at ${hoverGesture.name}` : "Point at a hotspot");
-              if (hoverGesture && performance.now() - lastSelectRef.current > 900) {
+              setStableStatus(hoverGesture ? dwellReady ? `Targeting ${hoverGesture.name}` : `Hold on ${hoverGesture.name}` : "Point directly at a hotspot");
+              if (dwellReady && hoverGesture && performance.now() - lastSelectRef.current > 900) {
                 lastSelectRef.current = performance.now();
                 onSelectGesture(hoverGesture.id);
               }
@@ -471,6 +511,8 @@ function HandTrackingController({
         } else {
           pinchRef.current = null;
           fistStartRef.current = null;
+          smoothedPointerRef.current = null;
+          hoverCandidateRef.current = null;
           onPointerUpdate(null);
           onPreviewGesture(null);
           setStableStatus("Hold your hand in frame");
@@ -489,8 +531,10 @@ function HandTrackingController({
       landmarkerRef.current?.close();
       landmarkerRef.current = null;
       streamRef.current = null;
+      smoothedPointerRef.current = null;
+      hoverCandidateRef.current = null;
     };
-  }, [enabled, onModeFallback, onPointerUpdate, onPreviewGesture, onSelectGesture, setStableStatus, onTargetChange]);
+  }, [enabled, onModeFallback, onPointerUpdate, onPreviewGesture, onSelectGesture, setStableStatus, onTargetChange, pointerDebug]);
 
   return <video ref={videoRef} className="tracking-video" playsInline muted />;
 }
@@ -501,25 +545,53 @@ function GestureCalibrationOverlay({ interactionMode, trackingStatus }) {
       <strong>{interactionMode === "hand" ? trackingStatus : "Mouse controls active"}</strong>
       <span>Hold your hand in frame</span>
       <span>Pinch and move to rotate</span>
-      <span>Release pinch to point at hotspots</span>
+      <span>Point directly at a hotspot</span>
       <span>Hold a fist to reset</span>
     </div>
   );
 }
 
-function HandPointer({ pointer }) {
+function HandPointer({ pointer, debug }) {
   if (!pointer) return null;
+  const rect = pointer.debug?.rect;
 
   return (
-    <div
-      className={`hand-pointer ${pointer.pinching ? "is-pinching" : ""} ${pointer.hovering ? "is-hovering" : ""}`}
-      style={{
-        left: `${pointer.x * 100}%`,
-        top: `${pointer.y * 100}%`
-      }}
-    >
-      <span>{pointer.pinching ? "Rotate" : pointer.hovering ? "Hotspot" : "Point"}</span>
-    </div>
+    <>
+      {debug && (
+        <>
+          <div
+            className="hand-pointer-raw"
+            style={{
+              left: `${pointer.rawX * 100}%`,
+              top: `${pointer.rawY * 100}%`
+            }}
+          />
+          {rect && (
+            <div
+              className="hand-hit-zone"
+              style={{
+                left: `${rect.left}px`,
+                top: `${rect.top}px`,
+                width: `${rect.width}px`,
+                height: `${rect.height}px`
+              }}
+            />
+          )}
+        </>
+      )}
+      <div
+        className={`hand-pointer ${pointer.pinching ? "is-pinching" : ""} ${pointer.hovering ? "is-hovering" : ""} ${pointer.previewing ? "is-previewing" : ""}`}
+        style={{
+          left: `${pointer.x * 100}%`,
+          top: `${pointer.y * 100}%`,
+          "--dwell": pointer.debug?.dwell || 0
+        }}
+      >
+        <i />
+        <span>{pointer.pinching ? "Rotate" : pointer.hovering ? "Target" : pointer.previewing ? "Hold" : "Point"}</span>
+        {debug && <em>{pointer.debug?.target || "none"}</em>}
+      </div>
+    </>
   );
 }
 
@@ -579,6 +651,7 @@ function DevPanel({
       {debugOptions.open && (
         <>
           <label><input type="checkbox" checked={debugOptions.anchorDebug} onChange={(event) => setDebugOptions((value) => ({ ...value, anchorDebug: event.target.checked }))} /> Anchor debug</label>
+          <label><input type="checkbox" checked={debugOptions.pointerDebug} onChange={(event) => setDebugOptions((value) => ({ ...value, pointerDebug: event.target.checked }))} /> Hand pointer debug</label>
           <label><input type="checkbox" checked={debugOptions.showBounds} onChange={(event) => setDebugOptions((value) => ({ ...value, showBounds: event.target.checked }))} /> Bounding box</label>
           <label><input type="checkbox" checked={debugOptions.showAxes} onChange={(event) => setDebugOptions((value) => ({ ...value, showAxes: event.target.checked }))} /> Axes helper</label>
           <div className="dev-grid">
@@ -768,11 +841,12 @@ function CenterStage({
             onPointerUpdate={setHandPointer}
             onSelectGesture={setSelectedGestureId}
             onPreviewGesture={setPreviewId}
+            pointerDebug={debugOptions.pointerDebug}
           />
         )}
         <InteractionModeToggle interactionMode={interactionMode} setInteractionMode={setInteractionMode} />
         <GestureCalibrationOverlay interactionMode={interactionMode} trackingStatus={trackingStatus} />
-        <HandPointer pointer={handPointer} />
+        <HandPointer pointer={handPointer} debug={debugOptions.pointerDebug} />
         <HotspotAnnotations
           activeHotspot={activeHotspot}
           personaJourney={personaJourney}
@@ -796,7 +870,7 @@ function App() {
   const [trackingStatus, setTrackingStatus] = useState("Mouse controls active");
   const [controlTarget, setControlTarget] = useState({ rotation: FRONT_ROTATION, cameraDistance: BASE_CAMERA_DISTANCE });
   const [anchorOverrides, setAnchorOverrides] = useState({});
-  const [debugOptions, setDebugOptions] = useState({ open: false, anchorDebug: false, showBounds: false, showAxes: false });
+  const [debugOptions, setDebugOptions] = useState({ open: false, anchorDebug: false, pointerDebug: false, showBounds: false, showAxes: false });
   const [hotspotScale, setHotspotScale] = useState(1.2);
   const [modelGlobalScale, setModelGlobalScale] = useState(1);
   const [pivotOffset, setPivotOffset] = useState([0, 0, 0]);
