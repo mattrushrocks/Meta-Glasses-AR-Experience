@@ -1164,7 +1164,7 @@ dd {
   }
 
   .viewer-shell {
-    --mobile-info-height: 250px;
+    --mobile-info-height: 320px;
     height: 100%;
     min-height: 0;
     border-radius: 8px;
@@ -1185,7 +1185,7 @@ dd {
   .annotation-card {
     grid-template-columns: 1fr;
     gap: 7px;
-    max-height: 150px;
+    max-height: 136px;
     overflow: auto;
     padding: 9px;
     background: rgba(255, 255, 255, 0.94);
@@ -1237,8 +1237,9 @@ dd {
 
   .mode-toggle {
     left: 8px;
-    top: 8px;
     right: 8px;
+    top: auto;
+    bottom: 274px;
     gap: 6px;
   }
 
@@ -1256,7 +1257,7 @@ dd {
   .tracking-video {
     left: auto;
     right: 8px;
-    bottom: 170px;
+    bottom: 192px;
     width: 96px;
     height: 72px;
   }
@@ -1264,7 +1265,7 @@ dd {
   .viewer-instructions {
     left: 8px;
     right: 8px;
-    bottom: 168px;
+    bottom: 154px;
     justify-content: center;
   }
 
