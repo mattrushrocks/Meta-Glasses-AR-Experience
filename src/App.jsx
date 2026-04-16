@@ -207,7 +207,7 @@ function RealGlassesAsset({ modelGlobalScale, pivotOffset }) {
 useGLTF.preload(MODEL_URL);
 
 function ModelAnchorPoints({ activeAnchorId, anchorOverrides, debugOptions }) {
-  const visibleAnchors = debugOptions.anchorDebug ? anchors : anchors.filter((anchor) => anchor.id === activeAnchorId);
+  const visibleAnchors = debugOptions.anchorDebug ? anchors : [];
 
   return (
     <>
@@ -257,7 +257,19 @@ function Hotspot({ gesture, anchor, isActive, onSelect, onPreview, hotspotScale,
           onMouseLeave={() => onPreview(null)}
           onFocus={() => onPreview(gesture.id)}
           onBlur={() => onPreview(null)}
-          onClick={() => onSelect(gesture.id)}
+          onPointerDown={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+          }}
+          onPointerUp={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+          }}
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            onSelect(gesture.id);
+          }}
           aria-label={`Select ${gesture.name}`}
         >
           <span />
@@ -406,21 +418,18 @@ function HandTrackingController({
             x: pointer.x * window.innerWidth,
             y: pointer.y * window.innerHeight
           };
-          const nearestHotspot = gestures
-            .map((item) => {
-              const element = document.querySelector(`[data-hotspot-id="${item.id}"]`);
-              if (!element) return null;
-              const rect = element.getBoundingClientRect();
-              return {
-                gesture: item,
-                x: rect.left + rect.width / 2,
-                y: rect.top + rect.height / 2,
-                distance: Math.hypot(rect.left + rect.width / 2 - pointerPixels.x, rect.top + rect.height / 2 - pointerPixels.y)
-              };
-            })
-            .filter(Boolean)
-            .sort((a, b) => a.distance - b.distance)[0];
-          const hoverGesture = nearestHotspot && nearestHotspot.distance < 112 ? nearestHotspot.gesture : null;
+          const targetPadding = 6;
+          const hoverGesture = gestures.find((item) => {
+            const element = document.querySelector(`[data-hotspot-id="${item.id}"]`);
+            if (!element) return false;
+            const rect = element.getBoundingClientRect();
+            return (
+              pointerPixels.x >= rect.left - targetPadding &&
+              pointerPixels.x <= rect.right + targetPadding &&
+              pointerPixels.y >= rect.top - targetPadding &&
+              pointerPixels.y <= rect.bottom + targetPadding
+            );
+          });
 
           onPointerUpdate({ ...pointer, hovering: hoverGesture?.id || null });
           onPreviewGesture(hoverGesture?.id || null);
