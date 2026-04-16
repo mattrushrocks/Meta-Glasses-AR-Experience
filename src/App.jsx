@@ -429,24 +429,29 @@ function HandTrackingController({
             x: pointer.x * window.innerWidth,
             y: pointer.y * window.innerHeight
           };
-          const targetPadding = 0;
+          const targetRadius = 42;
           const hitZones = gestures
             .map((item) => {
               const element = document.querySelector(`[data-hotspot-id="${item.id}"]`);
               if (!element) return null;
               const rect = element.getBoundingClientRect();
-              const left = rect.left - targetPadding;
-              const right = rect.right + targetPadding;
-              const top = rect.top - targetPadding;
-              const bottom = rect.bottom + targetPadding;
               const centerX = rect.left + rect.width / 2;
               const centerY = rect.top + rect.height / 2;
-              const inside = pointerPixels.x >= left && pointerPixels.x <= right && pointerPixels.y >= top && pointerPixels.y <= bottom;
+              const distance = Math.hypot(centerX - pointerPixels.x, centerY - pointerPixels.y);
+              const radius = Math.max(rect.width, rect.height) / 2 + targetRadius;
+              const inside = distance <= radius;
               return {
                 gesture: item,
-                rect: { left, right, top, bottom, width: right - left, height: bottom - top },
+                rect: {
+                  left: centerX - radius,
+                  right: centerX + radius,
+                  top: centerY - radius,
+                  bottom: centerY + radius,
+                  width: radius * 2,
+                  height: radius * 2
+                },
                 inside,
-                distance: Math.hypot(centerX - pointerPixels.x, centerY - pointerPixels.y)
+                distance
               };
             })
             .filter(Boolean);
