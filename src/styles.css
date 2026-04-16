@@ -1068,45 +1068,188 @@ dd {
 
 @media (max-width: 720px) {
   .app {
+    grid-template-rows: minmax(0, 1fr) auto;
     height: 100dvh;
-    padding: 10px;
-    gap: 10px;
-  }
-
-  .panel {
-    padding: 16px;
-    max-height: 34dvh;
-  }
-
-  h1 {
-    font-size: 1.72rem;
+    padding: 8px;
+    gap: 8px;
   }
 
   .center-stage {
+    order: 1;
     grid-template-rows: 1fr;
+    min-height: 0;
+  }
+
+  .left-panel {
+    order: 2;
+  }
+
+  .panel {
+    padding: 12px;
+    max-height: 27dvh;
+    border-radius: 8px;
+  }
+
+  h1 {
+    margin-bottom: 4px;
+    font-size: 1.22rem;
+    line-height: 1.12;
+  }
+
+  .eyebrow {
+    font-size: 0.68rem;
+  }
+
+  .intro {
+    margin-bottom: 10px;
+    font-size: 0.82rem;
+  }
+
+  .field {
+    gap: 5px;
+    margin-bottom: 10px;
+    font-size: 0.82rem;
+  }
+
+  select {
+    min-height: 38px;
+  }
+
+  .autoplay {
+    min-height: 38px;
+    margin-bottom: 10px;
+  }
+
+  .stage-summary {
+    margin-top: 10px;
+    padding-top: 10px;
+  }
+
+  .stage-summary span {
+    font-size: 0.68rem;
+  }
+
+  .stage-summary p {
+    margin-bottom: 0;
+    font-size: 0.8rem;
+    line-height: 1.32;
   }
 
   .viewer-shell {
     height: 100%;
     min-height: 0;
+    border-radius: 8px;
   }
 
   .annotation-layer {
-    left: 12px;
-    top: 112px;
-    right: 12px;
+    left: 8px;
+    right: 8px;
+    top: 58px;
   }
 
   .annotation-card {
     grid-template-columns: 1fr;
-    max-height: 42vh;
+    gap: 7px;
+    max-height: 28dvh;
     overflow: auto;
+    padding: 9px;
   }
 
   .annotation-card dl {
     grid-column: auto;
     grid-row: auto;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px 8px;
+  }
+
+  .annotation-card > span,
+  .annotation-card dt {
+    font-size: 0.66rem;
+  }
+
+  .annotation-card h3 {
+    font-size: 0.98rem;
+  }
+
+  .annotation-card dd {
+    font-size: 0.74rem;
+    line-height: 1.28;
+  }
+
+  .music-card {
+    width: min(250px, 100%);
+    max-height: 42px;
+  }
+
+  .mode-toggle {
+    left: 8px;
+    top: 8px;
+    right: 8px;
+    gap: 6px;
+  }
+
+  .mode-toggle button {
+    flex: 1;
+    min-height: 34px;
+    padding: 0 8px;
+    font-size: 0.78rem;
+  }
+
+  .calibration-overlay {
+    right: 8px;
+    top: 48px;
+    width: min(190px, calc(100% - 16px));
+    padding: 8px;
+  }
+
+  .calibration-overlay span {
+    display: none;
+  }
+
+  .tracking-video {
+    left: 8px;
+    bottom: 48px;
+    width: 96px;
+    height: 72px;
+  }
+
+  .viewer-instructions {
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    justify-content: center;
+  }
+
+  .viewer-instructions span {
+    font-size: 0.68rem;
+  }
+
+  .viewer-shell.is-hand-mode {
+    --hotspot-target-size: 54px;
+  }
+
+  .viewer-shell.is-hand-mode .hotspot span {
+    width: calc(17px * var(--hotspot-scale, 1));
+    height: calc(17px * var(--hotspot-scale, 1));
+  }
+
+  .viewer-shell.is-hand-mode .hotspot::after {
+    max-width: 78px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.58rem;
+  }
+
+  .hand-pointer span,
+  .hand-pointer em {
+    display: none;
+  }
+
+  .dev-panel {
+    right: 8px;
+    bottom: 8px;
+    width: min(280px, calc(100% - 16px));
+    max-height: 45dvh;
   }
 
   .panel-header {
