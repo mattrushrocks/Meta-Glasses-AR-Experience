@@ -415,8 +415,8 @@ function HandTrackingController({
           const fist = foldedFingers >= 4 && pinchDistance > 0.12;
           const isPinching = pinchDistance < 0.14;
           const rawPointer = {
-            x: clamp(1 - (indexTip.x + (indexTip.x - indexBase.x) * 0.34), 0, 1),
-            y: clamp(indexTip.y + (indexTip.y - indexBase.y) * 0.34, 0, 1)
+            x: clamp(1 - (indexTip.x + (indexTip.x - indexBase.x) * 0.12), 0, 1),
+            y: clamp(indexTip.y + (indexTip.y - indexBase.y) * 0.12, 0, 1)
           };
           const currentSmoothed = smoothedPointerRef.current || rawPointer;
           const smoothedPointer = {
@@ -429,13 +429,12 @@ function HandTrackingController({
             x: pointer.x * window.innerWidth,
             y: pointer.y * window.innerHeight
           };
-          const targetPadding = 1;
+          const targetPadding = 0;
           const hitZones = gestures
             .map((item) => {
               const element = document.querySelector(`[data-hotspot-id="${item.id}"]`);
               if (!element) return null;
-              const marker = element.querySelector("span");
-              const rect = (marker || element).getBoundingClientRect();
+              const rect = element.getBoundingClientRect();
               const left = rect.left - targetPadding;
               const right = rect.right + targetPadding;
               const top = rect.top - targetPadding;
@@ -471,7 +470,7 @@ function HandTrackingController({
               rect: hoverZone?.rect || null
             } : null
           });
-          onPreviewGesture(dwellReady ? hoverGesture?.id || null : null);
+          onPreviewGesture(hoverGesture?.id || null);
 
           if (fist) {
             fistStartRef.current ??= performance.now();
@@ -732,7 +731,7 @@ function HandCaptureOverlay({ gesture, stage, viewMode }) {
   );
 }
 
-function LeftPanel({ personaId, setPersonaId, personaJourney, activeMoment, activeGesture, autoPlay, setAutoPlay }) {
+function LeftPanel({ personaId, setPersonaId, personaJourney, autoPlay, setAutoPlay }) {
   return (
     <aside className="panel left-panel">
       <div className="eyebrow">Meta glasses journey</div>
@@ -754,18 +753,7 @@ function LeftPanel({ personaId, setPersonaId, personaJourney, activeMoment, acti
 
       <section className="stage-summary">
         <span>{personaJourney.platform}</span>
-        <h2>{activeGesture.name}</h2>
         <p>{personaJourney.summary}</p>
-      </section>
-
-      <section className="persona-mini">
-        <span>{activeMoment.journey}</span>
-        <p><strong>Feeling:</strong> {activeMoment.feeling}</p>
-        <p><strong>Doing:</strong> {activeMoment.doing}</p>
-        <p><strong>Why:</strong> {activeMoment.why}</p>
-        <p><strong>Where:</strong> {activeMoment.where}</p>
-        <p><strong>Listening:</strong> {activeMoment.listening}</p>
-        <p><strong>When:</strong> {activeMoment.when}</p>
       </section>
     </aside>
   );
@@ -878,8 +866,6 @@ function App() {
 
   const personaJourney = useMemo(() => personaJourneys.find((item) => item.id === personaId) || personaJourneys[0], [personaId]);
   const gesture = useMemo(() => gestures.find((item) => item.id === selectedGestureId) || gestures[0], [selectedGestureId]);
-  const activeGesture = useMemo(() => gestures.find((item) => item.id === previewId) || gesture, [gesture, previewId]);
-  const activeMoment = personaJourney.moments[activeGesture.id] || personaJourney.moments.touchpad;
 
   const handleTargetChange = useCallback((next) => {
     setControlTarget((current) => ({
@@ -925,8 +911,6 @@ function App() {
           personaId={personaJourney.id}
           setPersonaId={setPersonaId}
           personaJourney={personaJourney}
-          activeMoment={activeMoment}
-          activeGesture={activeGesture}
           autoPlay={autoPlay}
           setAutoPlay={setAutoPlay}
         />
