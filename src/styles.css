@@ -1164,7 +1164,7 @@ dd {
   }
 
   .viewer-shell {
-    --mobile-info-height: 220px;
+    --mobile-info-height: 250px;
     height: 100%;
     min-height: 0;
     border-radius: 8px;
@@ -1179,13 +1179,13 @@ dd {
     left: 8px;
     right: 8px;
     top: auto;
-    bottom: 44px;
+    bottom: 8px;
   }
 
   .annotation-card {
     grid-template-columns: 1fr;
     gap: 7px;
-    max-height: 132px;
+    max-height: 150px;
     overflow: auto;
     padding: 9px;
     background: rgba(255, 255, 255, 0.94);
@@ -1250,23 +1250,13 @@ dd {
   }
 
   .calibration-overlay {
-    left: 8px;
-    right: 112px;
-    top: auto;
-    bottom: 184px;
-    width: auto;
-    padding: 7px 8px;
-    box-shadow: none;
-  }
-
-  .calibration-overlay span {
     display: none;
   }
 
   .tracking-video {
     left: auto;
     right: 8px;
-    bottom: 136px;
+    bottom: 170px;
     width: 96px;
     height: 72px;
   }
@@ -1274,7 +1264,7 @@ dd {
   .viewer-instructions {
     left: 8px;
     right: 8px;
-    bottom: 8px;
+    bottom: 168px;
     justify-content: center;
   }
 
