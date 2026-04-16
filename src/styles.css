@@ -1136,23 +1136,31 @@ dd {
   }
 
   .viewer-shell {
+    --mobile-info-height: 178px;
     height: 100%;
     min-height: 0;
     border-radius: 8px;
   }
 
+  .viewer-shell canvas {
+    inset: 0 0 auto 0;
+    height: calc(100% - var(--mobile-info-height));
+  }
+
   .annotation-layer {
     left: 8px;
     right: 8px;
-    top: 58px;
+    top: auto;
+    bottom: 36px;
   }
 
   .annotation-card {
     grid-template-columns: 1fr;
     gap: 7px;
-    max-height: 28dvh;
+    max-height: 106px;
     overflow: auto;
     padding: 9px;
+    background: rgba(255, 255, 255, 0.94);
   }
 
   .annotation-card dl {
@@ -1196,10 +1204,13 @@ dd {
   }
 
   .calibration-overlay {
-    right: 8px;
-    top: 48px;
-    width: min(190px, calc(100% - 16px));
-    padding: 8px;
+    left: 8px;
+    right: 112px;
+    top: auto;
+    bottom: 148px;
+    width: auto;
+    padding: 7px 8px;
+    box-shadow: none;
   }
 
   .calibration-overlay span {
@@ -1207,8 +1218,9 @@ dd {
   }
 
   .tracking-video {
-    left: 8px;
-    bottom: 48px;
+    left: auto;
+    right: 8px;
+    bottom: 108px;
     width: 96px;
     height: 72px;
   }
@@ -1225,7 +1237,7 @@ dd {
   }
 
   .viewer-shell.is-hand-mode {
-    --hotspot-target-size: 54px;
+    --hotspot-target-size: 50px;
   }
 
   .viewer-shell.is-hand-mode .hotspot span {
