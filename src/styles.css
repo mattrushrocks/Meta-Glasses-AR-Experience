@@ -286,7 +286,7 @@ select {
   top: 68px;
   right: 292px;
   z-index: 7;
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .annotation-card {
@@ -295,8 +295,8 @@ select {
   grid-template-columns: minmax(150px, 0.72fr) minmax(0, 2fr);
   gap: 12px 18px;
   width: 100%;
-  max-height: 188px;
-  overflow: auto;
+  max-height: none;
+  overflow: visible;
   border: 1px solid rgba(29, 29, 31, 0.1);
   border-radius: 8px;
   padding: 12px 14px;
@@ -324,7 +324,7 @@ select {
   grid-column: 2;
   grid-row: 1 / span 2;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px 12px;
   margin: 0;
 }
@@ -919,7 +919,8 @@ dd {
 
   .annotation-card {
     grid-template-columns: 150px minmax(0, 1fr);
-    max-height: 220px;
+    max-height: 42vh;
+    overflow: auto;
   }
 
   .annotation-card dl {
@@ -957,7 +958,8 @@ dd {
 
   .annotation-card {
     grid-template-columns: 1fr;
-    max-height: 300px;
+    max-height: 42vh;
+    overflow: auto;
   }
 
   .annotation-card dl {
