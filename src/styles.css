@@ -1199,10 +1199,9 @@ dd {
   }
 
   .viewer-shell canvas {
-    position: absolute !important;
-    inset: 0 0 auto 0;
-    height: calc(100% - var(--mobile-info-height)) !important;
-    max-height: calc(100% - var(--mobile-info-height));
+    position: absolute;
+    inset: 0;
+    height: 100%;
   }
 
   .annotation-layer {
@@ -1310,12 +1309,24 @@ dd {
   }
 
   .viewer-shell.is-hand-mode {
-    --hotspot-target-size: 50px;
+    --hotspot-target-size: 46px;
   }
 
   .viewer-shell.is-hand-mode .hotspot span {
-    width: calc(17px * var(--hotspot-scale, 1));
-    height: calc(17px * var(--hotspot-scale, 1));
+    width: calc(15px * var(--hotspot-scale, 1));
+    height: calc(15px * var(--hotspot-scale, 1));
+  }
+
+  .hotspot-wrap,
+  .hotspot {
+    --hotspot-target-size: 38px;
+  }
+
+  .hotspot span,
+  .hotspot[data-hotspot-id="camera"] span,
+  .hotspot[data-hotspot-id="microphone"] span {
+    width: calc(14px * var(--hotspot-scale, 1));
+    height: calc(14px * var(--hotspot-scale, 1));
   }
 
   .viewer-shell.is-hand-mode .hotspot::after {
