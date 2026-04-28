@@ -181,6 +181,7 @@ select {
 
 .stage-summary,
 .journey-story,
+.journey-map-panel,
 .story-rail,
 .persona-mini,
 .detail-block,
@@ -193,6 +194,7 @@ select {
 
 .stage-summary p,
 .journey-story p,
+.journey-map-panel p,
 .persona-mini p,
 .detail-block dd,
 .persona-card dd,
@@ -201,9 +203,73 @@ select {
 }
 
 .journey-story,
+.journey-map-panel,
 .story-rail {
   display: grid;
   gap: 10px;
+}
+
+.journey-map-panel {
+  border-top: 1px solid rgba(29, 29, 31, 0.1);
+  padding-top: 18px;
+  margin-top: 18px;
+}
+
+.journey-map-panel h3 {
+  margin-bottom: 0;
+  font-size: 1.05rem;
+  line-height: 1.2;
+}
+
+.journey-map-snippet {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.journey-map-snippet img {
+  display: block;
+  width: 100%;
+  border: 1px solid rgba(29, 29, 31, 0.1);
+  border-radius: 8px;
+  object-fit: contain;
+  object-position: top center;
+  background: #ffffff;
+}
+
+.journey-map-snippet figcaption {
+  color: #3a3a3c;
+  font-size: 0.86rem;
+  line-height: 1.35;
+}
+
+.journey-map-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 12px;
+  margin: 0;
+}
+
+.journey-map-meta div {
+  display: grid;
+  gap: 3px;
+  border: 1px solid rgba(29, 29, 31, 0.08);
+  border-radius: 8px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.journey-map-meta dt {
+  font-size: 0.72rem;
+  color: #6e6e73;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.journey-map-meta dd {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #1d1d1f;
 }
 
 .journey-reference {

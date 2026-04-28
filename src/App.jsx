@@ -806,6 +806,23 @@ function LeftPanel({ personaId, setPersonaId, personaJourney, autoPlay, setAutoP
         </section>
       )}
 
+      <section className="journey-map-panel">
+        <span>Journey map section</span>
+        <h3>{currentStep?.journeyMap?.title || moment.journey}</h3>
+        {currentStep?.journeyMap?.image && (
+          <figure className="journey-map-snippet">
+            <img src={currentStep.journeyMap.image} alt={`${personaJourney.name} journey map section for ${currentStep.journeyMap.title}`} />
+            <figcaption>{currentStep.journeyMap.summary}</figcaption>
+          </figure>
+        )}
+        <dl className="journey-map-meta">
+          <div><dt>Feeling</dt><dd>{moment.feeling}</dd></div>
+          <div><dt>When</dt><dd>{moment.when}</dd></div>
+          <div><dt>Where</dt><dd>{moment.where}</dd></div>
+          <div><dt>Listening to</dt><dd>{moment.listening}</dd></div>
+        </dl>
+      </section>
+
       <section className="story-rail">
         <span>Story arc</span>
         <div className="story-list">

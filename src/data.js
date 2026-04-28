@@ -437,35 +437,60 @@ export const personaJourneys = [
         stage: "Entry / Setup",
         title: "Learning where the product begins",
         quote: "Wait... where do I touch?",
-        beat: "She starts by mapping the touch surface to familiar Apple-like gestures before trusting the glasses during a school day."
+        beat: "She starts by mapping the touch surface to familiar Apple-like gestures before trusting the glasses during a school day.",
+        journeyMap: {
+          image: "/journey-map/sheila-system-introduction.png",
+          title: "System Introduction",
+          summary: "The map frames setup as a clarity problem: Sheila needs to understand the system quickly before she can trust it."
+        }
       },
       {
         hotspotId: "speaker",
         stage: "Classroom support",
         title: "Keeping audio present but discreet",
         quote: "I need the prompt, but I still need to hear the room.",
-        beat: "Open-ear audio matters because Sheila wants reminders and media cues without disconnecting from students."
+        beat: "Open-ear audio matters because Sheila wants reminders and media cues without disconnecting from students.",
+        journeyMap: {
+          image: "/journey-map/sheila-moment-of-need.png",
+          title: "Moment of Need",
+          summary: "The journey map shows the need emerging from classroom workflow gaps, where support has to feel immediate and low-disruption."
+        }
       },
       {
         hotspotId: "camera",
         stage: "Appropriate capture",
         title: "Using capture only when it helps",
         quote: "I would use this if it helps me remember something, not if it distracts the room.",
-        beat: "The camera becomes useful when capture feels subtle, quick, and professionally appropriate."
+        beat: "The camera becomes useful when capture feels subtle, quick, and professionally appropriate.",
+        journeyMap: {
+          image: "/journey-map/sheila-natural-integration.png",
+          title: "Natural Integration",
+          summary: "The map points to capture becoming valuable once it happens during the moment instead of interrupting the moment."
+        }
       },
       {
         hotspotId: "microphone",
         stage: "Quiet assistance",
         title: "Voice support after the room settles",
         quote: "Voice is helpful, but only when it stays discreet.",
-        beat: "She adopts voice once the classroom context allows it and the interaction feels polished."
+        beat: "She adopts voice once the classroom context allows it and the interaction feels polished.",
+        journeyMap: {
+          image: "/journey-map/sheila-ongoing-reliability.png",
+          title: "Ongoing Reliability",
+          summary: "Reliability becomes the test: voice help only works if it supports her routine without adding uncertainty."
+        }
       },
       {
         hotspotId: "body",
         stage: "Comfort / Trust",
         title: "Deciding whether the glasses belong in her routine",
         quote: "If they feel natural, I’ll keep them on.",
-        beat: "Long-term use depends on whether the frame feels familiar enough to disappear into the school day."
+        beat: "Long-term use depends on whether the frame feels familiar enough to disappear into the school day.",
+        journeyMap: {
+          image: "/journey-map/sheila-lasting-judgment.png",
+          title: "Lasting Judgment",
+          summary: "The final map stage asks whether the product earns a long-term role or stays a novelty."
+        }
       }
     ],
     moments: {
@@ -588,35 +613,60 @@ export const personaJourneys = [
         stage: "Content Interaction",
         title: "Music first, then everything else",
         quote: "This is the part I want all day.",
-        beat: "Reid enters through audio. If the open-ear speaker feels good, the rest of the product earns a shot."
+        beat: "Reid enters through audio. If the open-ear speaker feels good, the rest of the product earns a shot.",
+        journeyMap: {
+          image: "/journey-map/reid-playback-experience.png",
+          title: "Moment of Need",
+          summary: "The glasses journey frames Reid's audio interest as a need for faster, more natural support without switching devices."
+        }
       },
       {
         hotspotId: "touchpad",
         stage: "Hands-free control",
         title: "Skipping tracks without breaking stride",
         quote: "Let me control playback without reaching for my phone.",
-        beat: "The touch surface matters because it keeps him in motion while still giving him confident media control."
+        beat: "The touch surface matters because it keeps him in motion while still giving him confident media control.",
+        journeyMap: {
+          image: "/journey-map/reid-content-selection.png",
+          title: "System Introduction",
+          summary: "The map shows that Reid needs clear interaction cues before touch gestures can feel fast and dependable."
+        }
       },
       {
         hotspotId: "camera",
         stage: "Peak Engagement",
         title: "Capturing the moment without interrupting it",
         quote: "I want the memory without breaking the vibe.",
-        beat: "The camera succeeds when capture feels instant and keeps the social moment intact."
+        beat: "The camera succeeds when capture feels instant and keeps the social moment intact.",
+        journeyMap: {
+          image: "/journey-map/reid-success-state.png",
+          title: "Natural Integration",
+          summary: "The blue journey shows value when capture and audio happen in the moment without disrupting what he is doing."
+        }
       },
       {
         hotspotId: "microphone",
         stage: "Discovery / Exploration",
         title: "Trying the AI layer on top of the music layer",
         quote: "Now I want to see what the AI can actually do.",
-        beat: "Voice becomes a curiosity engine for Reid: navigation, questions, and AI are all part of the appeal."
+        beat: "Voice becomes a curiosity engine for Reid: navigation, questions, and AI are all part of the appeal.",
+        journeyMap: {
+          image: "/journey-map/reid-trigger-moment.png",
+          title: "Expanded Use",
+          summary: "Once the glasses feel useful, Reid starts exploring more contexts, including voice, AI, and daily support."
+        }
       },
       {
         hotspotId: "body",
         stage: "Long-Term Use",
         title: "Keeping it in the daily tech rotation",
         quote: "If it feels good, it stays in the rotation.",
-        beat: "The frame has to feel stylish and worth wearing, or none of the other features matter long term."
+        beat: "The frame has to feel stylish and worth wearing, or none of the other features matter long term.",
+        journeyMap: {
+          image: "/journey-map/reid-experience-takeaway.png",
+          title: "Reinforced / Broken",
+          summary: "Reid's long-term trust depends on consistent behavior; one unreliable moment can weaken confidence quickly."
+        }
       }
     ],
     moments: {
