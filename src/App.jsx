@@ -293,18 +293,21 @@ function Hotspot({ gesture, anchor, isActive, onSelect, onPreview, hotspotScale,
 function HotspotAnnotations({ activeHotspot, personaJourney }) {
   if (!activeHotspot) return null;
   const moment = personaJourney.moments[activeHotspot.id] || personaJourney.moments.touchpad;
+  const storyStep =
+    personaJourney.story?.find((item) => item.hotspotId === activeHotspot.id) ||
+    personaJourney.story?.[0];
 
   return (
     <div className="annotation-layer">
       <details className="annotation-card" open>
         <summary>
-          <span>{activeHotspot.location}</span>
+          <span>{storyStep?.stage || activeHotspot.location}</span>
           <strong>{activeHotspot.name}</strong>
         </summary>
         <dl>
           <div><dt>Does</dt><dd>{activeHotspot.whatItDoes}</dd></div>
-          <div><dt>Persona</dt><dd>{moment.feeling}: {moment.why}</dd></div>
-          <div><dt>Use</dt><dd>{activeHotspot.likelyInteraction}</dd></div>
+          <div><dt>Story</dt><dd>{storyStep?.beat || moment.why}</dd></div>
+          <div><dt>Persona</dt><dd>{moment.feeling}: {moment.doing}</dd></div>
           <div><dt>Context</dt><dd>{activeHotspot.id === "speaker" ? moment.listening : `${moment.where}; ${moment.when}`}</dd></div>
         </dl>
         {activeHotspot.id === "speaker" && moment.musicImage && (
@@ -751,7 +754,13 @@ function HandCaptureOverlay({ gesture, stage, viewMode }) {
   );
 }
 
-function LeftPanel({ personaId, setPersonaId, personaJourney, autoPlay, setAutoPlay }) {
+function LeftPanel({ personaId, setPersonaId, personaJourney, autoPlay, setAutoPlay, activeHotspot }) {
+  const moment = personaJourney.moments[activeHotspot?.id] || personaJourney.moments[personaJourney.defaultHotspotId] || personaJourney.moments.touchpad;
+  const currentStep =
+    personaJourney.story?.find((item) => item.hotspotId === activeHotspot?.id) ||
+    personaJourney.story?.find((item) => item.hotspotId === personaJourney.defaultHotspotId) ||
+    personaJourney.story?.[0];
+
   return (
     <aside className="panel left-panel">
       <div className="eyebrow">Meta glasses journey</div>
@@ -768,12 +777,39 @@ function LeftPanel({ personaId, setPersonaId, personaJourney, autoPlay, setAutoP
       </label>
 
       <button className={`autoplay ${autoPlay ? "active" : ""}`} onClick={() => setAutoPlay((value) => !value)}>
-        {autoPlay ? "Pause hotspot tour" : "Autoplay hotspot tour"}
+        {autoPlay ? "Pause journey story" : "Autoplay journey story"}
       </button>
 
       <section className="stage-summary">
         <span>{personaJourney.platform}</span>
         <p>{personaJourney.summary}</p>
+      </section>
+
+      {currentStep && (
+        <section className="journey-story">
+          <span>{currentStep.stage}</span>
+          <h3>{currentStep.title}</h3>
+          <p className="journey-quote">"{currentStep.quote}"</p>
+          <p className="journey-beat">{currentStep.beat}</p>
+          <dl className="journey-meta">
+            <div><dt>Trying to do</dt><dd>{moment.doing}</dd></div>
+            <div><dt>Where</dt><dd>{moment.where}</dd></div>
+            <div><dt>Why Meta matters</dt><dd>{moment.why}</dd></div>
+            <div><dt>Listening</dt><dd>{moment.listening}</dd></div>
+          </dl>
+        </section>
+      )}
+
+      <section className="story-rail">
+        <span>Story arc</span>
+        <div className="story-list">
+          {personaJourney.story?.map((step) => (
+            <article key={step.hotspotId} className={`story-item ${step.hotspotId === activeHotspot?.id ? "is-current" : ""}`}>
+              <strong>{step.stage}</strong>
+              <p>{step.title}</p>
+            </article>
+          ))}
+        </div>
       </section>
     </aside>
   );
@@ -886,6 +922,7 @@ function App() {
 
   const personaJourney = useMemo(() => personaJourneys.find((item) => item.id === personaId) || personaJourneys[0], [personaId]);
   const gesture = useMemo(() => gestures.find((item) => item.id === selectedGestureId) || gestures[0], [selectedGestureId]);
+  const activeHotspot = useMemo(() => gestures.find((item) => item.id === previewId) || gesture, [gesture, previewId]);
 
   const handleTargetChange = useCallback((next) => {
     setControlTarget((current) => ({
@@ -899,7 +936,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    setSelectedGestureId("touchpad");
+    setSelectedGestureId(personaJourney.defaultHotspotId || "touchpad");
     setPreviewId(null);
   }, [personaJourney]);
 
@@ -914,15 +951,17 @@ function App() {
   useEffect(() => {
     if (!autoPlay) return undefined;
 
+    const storyOrder = personaJourney.story?.map((item) => item.hotspotId).filter(Boolean) || gestures.map((item) => item.id);
+
     const interval = window.setInterval(() => {
       setSelectedGestureId((current) => {
-        const index = gestures.findIndex((item) => item.id === current);
-        return gestures[(index + 1) % gestures.length].id;
+        const index = storyOrder.findIndex((item) => item === current);
+        return storyOrder[(index + 1 + storyOrder.length) % storyOrder.length];
       });
     }, 4200);
 
     return () => window.clearInterval(interval);
-  }, [autoPlay]);
+  }, [autoPlay, personaJourney]);
 
   return (
     <AppErrorBoundary>
@@ -933,6 +972,7 @@ function App() {
           personaJourney={personaJourney}
           autoPlay={autoPlay}
           setAutoPlay={setAutoPlay}
+          activeHotspot={activeHotspot}
         />
         <AppErrorBoundary>
           <CenterStage

@@ -430,6 +430,44 @@ export const personaJourneys = [
     platform: "Ray-Ban Meta Gen 1 Wayfarer",
     summary: "Picked up Meta glasses because they feel close to her Apple ecosystem, then kept using them for classroom support.",
     defaultStageId: "entry",
+    defaultHotspotId: "touchpad",
+    story: [
+      {
+        hotspotId: "touchpad",
+        stage: "Entry / Setup",
+        title: "Learning where the product begins",
+        quote: "Wait... where do I touch?",
+        beat: "She starts by mapping the touch surface to familiar Apple-like gestures before trusting the glasses during a school day."
+      },
+      {
+        hotspotId: "speaker",
+        stage: "Classroom support",
+        title: "Keeping audio present but discreet",
+        quote: "I need the prompt, but I still need to hear the room.",
+        beat: "Open-ear audio matters because Sheila wants reminders and media cues without disconnecting from students."
+      },
+      {
+        hotspotId: "camera",
+        stage: "Appropriate capture",
+        title: "Using capture only when it helps",
+        quote: "I would use this if it helps me remember something, not if it distracts the room.",
+        beat: "The camera becomes useful when capture feels subtle, quick, and professionally appropriate."
+      },
+      {
+        hotspotId: "microphone",
+        stage: "Quiet assistance",
+        title: "Voice support after the room settles",
+        quote: "Voice is helpful, but only when it stays discreet.",
+        beat: "She adopts voice once the classroom context allows it and the interaction feels polished."
+      },
+      {
+        hotspotId: "body",
+        stage: "Comfort / Trust",
+        title: "Deciding whether the glasses belong in her routine",
+        quote: "If they feel natural, I’ll keep them on.",
+        beat: "Long-term use depends on whether the frame feels familiar enough to disappear into the school day."
+      }
+    ],
     moments: {
       camera: {
         feeling: "cautious",
@@ -543,6 +581,44 @@ export const personaJourneys = [
     platform: "Meta Glasses Gen 2",
     summary: "An avid tech fan exploring new audio technology. He listens when hands-free audio is best and captures moments without interrupting the experience.",
     defaultStageId: "interaction",
+    defaultHotspotId: "speaker",
+    story: [
+      {
+        hotspotId: "speaker",
+        stage: "Content Interaction",
+        title: "Music first, then everything else",
+        quote: "This is the part I want all day.",
+        beat: "Reid enters through audio. If the open-ear speaker feels good, the rest of the product earns a shot."
+      },
+      {
+        hotspotId: "touchpad",
+        stage: "Hands-free control",
+        title: "Skipping tracks without breaking stride",
+        quote: "Let me control playback without reaching for my phone.",
+        beat: "The touch surface matters because it keeps him in motion while still giving him confident media control."
+      },
+      {
+        hotspotId: "camera",
+        stage: "Peak Engagement",
+        title: "Capturing the moment without interrupting it",
+        quote: "I want the memory without breaking the vibe.",
+        beat: "The camera succeeds when capture feels instant and keeps the social moment intact."
+      },
+      {
+        hotspotId: "microphone",
+        stage: "Discovery / Exploration",
+        title: "Trying the AI layer on top of the music layer",
+        quote: "Now I want to see what the AI can actually do.",
+        beat: "Voice becomes a curiosity engine for Reid: navigation, questions, and AI are all part of the appeal."
+      },
+      {
+        hotspotId: "body",
+        stage: "Long-Term Use",
+        title: "Keeping it in the daily tech rotation",
+        quote: "If it feels good, it stays in the rotation.",
+        beat: "The frame has to feel stylish and worth wearing, or none of the other features matter long term."
+      }
+    ],
     moments: {
       camera: {
         feeling: "excited",
