@@ -206,6 +206,29 @@ select {
   gap: 10px;
 }
 
+.journey-reference {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid rgba(29, 29, 31, 0.1);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.64);
+}
+
+.journey-reference span {
+  color: #6e6e73;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.journey-reference strong {
+  color: #1d1d1f;
+  font-size: 0.86rem;
+}
+
 .journey-story h3 {
   margin-bottom: 0;
   font-size: 1.15rem;
@@ -253,10 +276,18 @@ select {
 }
 
 .story-item {
+  appearance: none;
+  width: 100%;
+  text-align: left;
   border: 1px solid rgba(29, 29, 31, 0.1);
   border-radius: 8px;
   padding: 10px 12px;
   background: rgba(255, 255, 255, 0.68);
+}
+
+.story-item:hover {
+  border-color: rgba(0, 122, 255, 0.24);
+  background: rgba(255, 255, 255, 0.9);
 }
 
 .story-item strong {

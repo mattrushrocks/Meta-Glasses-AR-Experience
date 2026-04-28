@@ -296,12 +296,13 @@ function HotspotAnnotations({ activeHotspot, personaJourney }) {
   const storyStep =
     personaJourney.story?.find((item) => item.hotspotId === activeHotspot.id) ||
     personaJourney.story?.[0];
+  const storyIndex = Math.max(0, personaJourney.story?.findIndex((item) => item.hotspotId === activeHotspot.id) ?? 0);
 
   return (
     <div className="annotation-layer">
       <details className="annotation-card" open>
         <summary>
-          <span>{storyStep?.stage || activeHotspot.location}</span>
+          <span>{`Journey map ${storyIndex + 1}${storyStep?.stage ? ` · ${storyStep.stage}` : ""}`}</span>
           <strong>{activeHotspot.name}</strong>
         </summary>
         <dl>
@@ -754,12 +755,13 @@ function HandCaptureOverlay({ gesture, stage, viewMode }) {
   );
 }
 
-function LeftPanel({ personaId, setPersonaId, personaJourney, autoPlay, setAutoPlay, activeHotspot }) {
+function LeftPanel({ personaId, setPersonaId, personaJourney, autoPlay, setAutoPlay, activeHotspot, onSelectHotspot }) {
   const moment = personaJourney.moments[activeHotspot?.id] || personaJourney.moments[personaJourney.defaultHotspotId] || personaJourney.moments.touchpad;
   const currentStep =
     personaJourney.story?.find((item) => item.hotspotId === activeHotspot?.id) ||
     personaJourney.story?.find((item) => item.hotspotId === personaJourney.defaultHotspotId) ||
     personaJourney.story?.[0];
+  const currentStepIndex = Math.max(0, personaJourney.story?.findIndex((item) => item.hotspotId === currentStep?.hotspotId) ?? 0);
 
   return (
     <aside className="panel left-panel">
@@ -787,6 +789,10 @@ function LeftPanel({ personaId, setPersonaId, personaJourney, autoPlay, setAutoP
 
       {currentStep && (
         <section className="journey-story">
+          <div className="journey-reference">
+            <span>Journey map reference</span>
+            <strong>{`Step ${currentStepIndex + 1} of ${personaJourney.story?.length || 1}`}</strong>
+          </div>
           <span>{currentStep.stage}</span>
           <h3>{currentStep.title}</h3>
           <p className="journey-quote">"{currentStep.quote}"</p>
@@ -803,11 +809,16 @@ function LeftPanel({ personaId, setPersonaId, personaJourney, autoPlay, setAutoP
       <section className="story-rail">
         <span>Story arc</span>
         <div className="story-list">
-          {personaJourney.story?.map((step) => (
-            <article key={step.hotspotId} className={`story-item ${step.hotspotId === activeHotspot?.id ? "is-current" : ""}`}>
-              <strong>{step.stage}</strong>
+          {personaJourney.story?.map((step, index) => (
+            <button
+              key={step.hotspotId}
+              type="button"
+              className={`story-item ${step.hotspotId === activeHotspot?.id ? "is-current" : ""}`}
+              onClick={() => onSelectHotspot(step.hotspotId)}
+            >
+              <strong>{`Step ${index + 1} · ${step.stage}`}</strong>
               <p>{step.title}</p>
-            </article>
+            </button>
           ))}
         </div>
       </section>
@@ -973,6 +984,7 @@ function App() {
           autoPlay={autoPlay}
           setAutoPlay={setAutoPlay}
           activeHotspot={activeHotspot}
+          onSelectHotspot={setSelectedGestureId}
         />
         <AppErrorBoundary>
           <CenterStage
