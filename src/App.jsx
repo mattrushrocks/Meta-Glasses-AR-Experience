@@ -99,8 +99,8 @@ function ModelRig({ controlTarget, interactionMode, children }) {
   const { camera, size } = useThree();
   const isMobileViewport = size.width < 720;
   const isTabletViewport = size.width >= 720 && size.width <= 1180;
-  const cameraDistanceMultiplier = isMobileViewport ? 1.82 : isTabletViewport ? 1.22 : 1;
-  const modelYOffset = isMobileViewport ? 0.62 : isTabletViewport ? 0.42 : 0;
+  const cameraDistanceMultiplier = isMobileViewport ? 1.82 : isTabletViewport ? 1.36 : 1;
+  const modelYOffset = isMobileViewport ? 0.62 : isTabletViewport ? 0.98 : 0;
 
   useEffect(() => {
     camera.position.z = controlTarget.cameraDistance * cameraDistanceMultiplier;

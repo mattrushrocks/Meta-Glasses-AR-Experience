@@ -1274,8 +1274,8 @@ dd {
   }
 
   .viewer-shell canvas {
-    bottom: var(--tablet-info-height);
-    height: auto;
+    inset: 0 0 auto 0;
+    height: calc(100% - var(--tablet-info-height)) !important;
   }
 
   .annotation-layer {
