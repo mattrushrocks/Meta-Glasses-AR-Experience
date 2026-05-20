@@ -97,14 +97,16 @@ function getHotspotFocusRotation(gesture) {
 function ModelRig({ controlTarget, interactionMode, children }) {
   const groupRef = useRef(null);
   const { camera, size } = useThree();
-  const mobileCameraMultiplier = size.width < 720 ? 1.82 : 1;
-  const mobileModelYOffset = size.width < 720 ? 0.62 : 0;
+  const isMobileViewport = size.width < 720;
+  const isTabletViewport = size.width >= 720 && size.width <= 1180;
+  const cameraDistanceMultiplier = isMobileViewport ? 1.82 : isTabletViewport ? 1.22 : 1;
+  const modelYOffset = isMobileViewport ? 0.62 : isTabletViewport ? 0.42 : 0;
 
   useEffect(() => {
-    camera.position.z = controlTarget.cameraDistance * mobileCameraMultiplier;
+    camera.position.z = controlTarget.cameraDistance * cameraDistanceMultiplier;
     camera.lookAt(0, 0, 0);
     camera.updateProjectionMatrix();
-  }, [camera, controlTarget.cameraDistance, mobileCameraMultiplier, size.width]);
+  }, [camera, controlTarget.cameraDistance, cameraDistanceMultiplier, size.width]);
 
   useFrame((_, delta) => {
     const damping = 1 - Math.exp(-delta * 8);
@@ -112,17 +114,17 @@ function ModelRig({ controlTarget, interactionMode, children }) {
       groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, controlTarget.rotation[0], damping);
       groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, controlTarget.rotation[1], damping);
       groupRef.current.rotation.z = THREE.MathUtils.lerp(groupRef.current.rotation.z, controlTarget.rotation[2], damping);
-      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, mobileModelYOffset, damping);
+      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, modelYOffset, damping);
     }
 
     if (interactionMode === "hand") {
-      camera.position.z = THREE.MathUtils.lerp(camera.position.z, controlTarget.cameraDistance * mobileCameraMultiplier, damping);
+      camera.position.z = THREE.MathUtils.lerp(camera.position.z, controlTarget.cameraDistance * cameraDistanceMultiplier, damping);
       camera.lookAt(0, 0, 0);
       camera.updateProjectionMatrix();
     }
   });
 
-  return <group ref={groupRef} rotation={FRONT_ROTATION} position={[0, mobileModelYOffset, 0]}>{children}</group>;
+  return <group ref={groupRef} rotation={FRONT_ROTATION} position={[0, modelYOffset, 0]}>{children}</group>;
 }
 
 function GlassesModel({

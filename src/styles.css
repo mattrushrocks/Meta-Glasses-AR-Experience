@@ -1254,7 +1254,7 @@ dd {
   }
 
   .viewer-shell {
-    --tablet-info-height: 245px;
+    --tablet-info-height: clamp(280px, 30dvh, 340px);
     height: 100%;
     min-height: 0;
   }
@@ -1280,14 +1280,14 @@ dd {
 
   .annotation-layer {
     top: auto;
-    bottom: 22px;
+    bottom: 18px;
     right: 22px;
     z-index: 8;
   }
 
   .annotation-card {
     grid-template-columns: 150px minmax(0, 1fr);
-    max-height: calc(var(--tablet-info-height) - 44px);
+    max-height: calc(var(--tablet-info-height) - 36px);
     overflow: auto;
     background: rgba(255, 255, 255, 0.94);
   }
@@ -1297,7 +1297,11 @@ dd {
   }
 
   .viewer-instructions {
-    bottom: calc(var(--tablet-info-height) + 18px);
+    display: none;
+  }
+
+  .calibration-overlay {
+    width: min(230px, calc(100% - 44px));
   }
 }
 
@@ -1503,6 +1507,7 @@ dd {
   }
 
   .viewer-instructions {
+    display: flex;
     left: 8px;
     right: 8px;
     top: calc(100% - var(--mobile-info-height) + 86px);
